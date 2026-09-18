@@ -10,6 +10,9 @@ test('tread textures render distinctly and survive size changes and stowing', as
   await page.goto('/');
   const scene = page.getByRole('img', { name: /Original SUV/ });
   await expect(scene).toHaveAttribute('data-ready', 'true');
+  // Enable ramp preview so the ramp appears in the 3D view.
+  await page.getByTestId('show-ramp-control').click();
+  await expect(scene).toHaveAttribute('data-show-ramp', 'true');
   await page.getByRole('button', { name: 'Cargo detail view', exact: true }).click();
   const category = page.getByRole('navigation', { name: 'Configuration categories' });
   await category.getByRole('button', { name: /Surface/ }).click();

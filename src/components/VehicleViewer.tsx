@@ -16,6 +16,7 @@ export interface VehicleViewerProps {
   color: string;
   vehicleColor: string;
   stowed: boolean;
+  showRamp: boolean;
   view: 'three-quarter' | 'rear' | 'side' | 'front' | 'cargo';
 }
 const PRESETS = {
@@ -132,25 +133,27 @@ function Fallback(props: VehicleViewerProps) {
         <path d="m216 76-10 25h189l-11-25Z" fill={SCENE_PALETTE.glass.hex} />
         <rect x="190" y="145" width="9" height="41" rx="3" fill={SCENE_PALETTE.taillight.hex} />
         <rect x="401" y="145" width="9" height="41" rx="3" fill={SCENE_PALETTE.taillight.hex} />
-        {props.stowed ? (
-          <rect x="260" y="239" width="80" height="7" fill={props.color} />
-        ) : (
-          <>
-            <path
-              d={`M${300 - width / 2} 234h${width}l28 104H${272 - width / 2}Z`}
-              fill={TREAD_SURFACES[props.coating].base}
-              stroke={props.color}
-              strokeWidth="7"
-            />
-            {Array.from({ length: 10 }, (_, i) => (
+        {props.showRamp && (
+          props.stowed ? (
+            <rect x="260" y="239" width="80" height="7" fill={props.color} />
+          ) : (
+            <>
               <path
-                key={i}
-                d={`M${297 - width / 2 - i * 2.2} ${244 + i * 9}h${width + 6 + i * 4.4}`}
-                stroke={SCENE_PALETTE.rampTexture.hex}
-                opacity=".35"
+                d={`M${300 - width / 2} 234h${width}l28 104H${272 - width / 2}Z`}
+                fill={TREAD_SURFACES[props.coating].base}
+                stroke={props.color}
+                strokeWidth="7"
               />
-            ))}
-          </>
+              {Array.from({ length: 10 }, (_, i) => (
+                <path
+                  key={i}
+                  d={`M${297 - width / 2 - i * 2.2} ${244 + i * 9}h${width + 6 + i * 4.4}`}
+                  stroke={SCENE_PALETTE.rampTexture.hex}
+                  opacity=".35"
+                />
+              ))}
+            </>
+          )
         )}
       </svg>
       <p>3D is unavailable. Showing a simplified rear preview.</p>
@@ -190,7 +193,7 @@ function Studio(props: VehicleViewerProps) {
         color={SCENE_PALETTE.studioWhite.hex}
       />
       <Vehicle color={props.vehicleColor} />
-      <Ramp {...props} />
+      {props.showRamp && <Ramp {...props} />}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 0]} receiveShadow>
         <planeGeometry args={[200, 200]} />
         <shadowMaterial transparent opacity={0.24} />
@@ -209,7 +212,7 @@ export default function VehicleViewer(props: VehicleViewerProps) {
     <div
       className="vehicle-viewer"
       role="img"
-      aria-label={`Original SUV with open tailgate. ${props.view} view, ${props.size} ${props.type}, ${props.coating} surface, ${props.stowed ? 'stowed' : 'deployed'}.`}
+      aria-label={`Original SUV with open tailgate. ${props.view} view${props.showRamp ? `, ${props.size} ${props.type}, ${props.coating} surface, ${props.stowed ? 'stowed' : 'deployed'}` : ''}.`}
       data-view={props.view}
       data-size={props.size}
       data-type={props.type}
@@ -217,6 +220,7 @@ export default function VehicleViewer(props: VehicleViewerProps) {
       data-color={props.color}
       data-vehicle-color={props.vehicleColor}
       data-stowed={props.stowed}
+      data-show-ramp={props.showRamp}
       data-ready={ready}
     >
       {failed ? (

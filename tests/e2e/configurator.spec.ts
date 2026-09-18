@@ -18,7 +18,9 @@ test('renders the 3D SUV without runtime errors and updates every visual option'
   await expect(categories.getByRole('button', { name: /Design/ })).toHaveCount(0);
   await expect(page.getByRole('group', { name: 'Ramp design' })).toHaveCount(0);
   await expect(page.getByText('Integrated retractable pet ramp', { exact: true })).toBeVisible();
-  await expect(page.getByLabel('Stow retractable ramp')).toBeEnabled();
+  // Ramp preview is off by default; the show-ramp toggle is available but stow is hidden until enabled.
+  await expect(page.getByLabel('Show ramp preview')).toBeEnabled();
+  await expect(scene).toHaveAttribute('data-show-ramp', 'false');
   await expect(scene).toHaveAttribute('data-vehicle-color', '#DDDEE1');
   await expect(page.getByRole('button', { name: 'Chalk vehicle paint' })).toHaveAttribute(
     'aria-pressed',
@@ -32,8 +34,10 @@ test('renders the 3D SUV without runtime errors and updates every visual option'
     .getByRole('button', { name: /^Large/ })
     .click();
   await expect(scene).toHaveAttribute('data-size', 'large');
-  // Stow toggle is always available for retractable-only product
   await expect(scene).toHaveAttribute('data-type', 'retractable');
+  // Enable ramp preview to expose the stow toggle.
+  await page.getByTestId('show-ramp-control').click();
+  await expect(scene).toHaveAttribute('data-show-ramp', 'true');
   // ADS Toggle's documented testId targets its visible clickable label.
   await page.getByTestId('stow-control').click();
   await expect(page.getByLabel('Stow retractable ramp')).toBeChecked();
