@@ -1,0 +1,31 @@
+image: node:22
+
+pipelines:
+  default:
+    - step:
+        name: Build & Check
+        script:
+          - npm ci
+          - npm run check
+        artifacts:
+          - dist/**
+  pull-requests:
+    '**':
+      - step:
+          name: Lint, Build & Unit Tests
+          script:
+            - npm ci
+            - npm run check
+  branches:
+    main:
+      - step:
+          name: Build & Check
+          script:
+            - npm ci
+            - npm run check
+          artifacts:
+            - dist/**
+
+definitions:
+  caches:
+    npm: ~/.npm

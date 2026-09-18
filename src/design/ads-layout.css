@@ -1,0 +1,107 @@
+/* Only product-owned wrapper layout. Do not override Atlaskit component internals. */
+.ads-native-dialog {
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-large, 8px);
+  width: min(600px, calc(100% - 32px));
+  max-height: calc(100dvh - 48px);
+  background: var(--ds-surface-overlay, #ffffff);
+  color: var(--ds-text);
+  box-shadow: var(--ds-shadow-overlay);
+}
+.ads-native-dialog::backdrop {
+  background: var(--ds-blanket, #091e427d);
+}
+.ads-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-200, 16px);
+  padding: var(--ds-space-300, 24px);
+}
+.ads-modal-header h2 {
+  margin: 0;
+  font: var(--ds-font-heading-medium);
+}
+.ads-native-dialog .ads-dialog-body {
+  padding: 0 var(--ds-space-300, 24px) var(--ds-space-300, 24px);
+}
+.ads-dialog-body > h3:first-child {
+  margin-top: 0;
+}
+
+.ads-action {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.stage-heading .ads-action {
+  pointer-events: auto;
+}
+.summary-action {
+  width: 180px;
+}
+.reset-action {
+  margin-left: var(--ds-space-100, 8px);
+}
+.next-action {
+  margin-left: auto;
+}
+.ads-full-width {
+  width: 100%;
+}
+.ads-dialog-body {
+  padding-bottom: var(--ds-space-300, 24px);
+  color: var(--ds-text);
+  font: var(--ds-font-body);
+}
+.ads-dialog-body > h2 {
+  font: var(--ds-font-heading-large);
+  margin: 0 0 var(--ds-space-200, 16px);
+}
+.ads-dialog-body > p {
+  font: var(--ds-font-body);
+  color: var(--ds-text-subtle);
+  margin: var(--ds-space-200, 16px) 0;
+}
+.ads-dialog-body > h3 {
+  font: var(--ds-font-heading-small);
+  margin: var(--ds-space-300, 24px) 0 var(--ds-space-150, 12px);
+}
+.ads-share-field,
+.ads-disclaimer {
+  margin: var(--ds-space-300, 24px) 0;
+}
+.ads-dialog-body .summary-list > div {
+  font: var(--ds-font-body);
+  gap: var(--ds-space-200, 16px);
+}
+.ads-dialog-body .summary-fine-print {
+  font: var(--ds-font-body-small);
+}
+.ads-dialog-body .dialog-secondary {
+  flex-wrap: wrap;
+  gap: var(--ds-space-100, 8px);
+}
+.header-nav > .ads-action {
+  font: var(--ds-font-body);
+}
+@media (max-width: 740px) {
+  .summary-action {
+    width: 125px;
+  }
+  .reset-action {
+    margin-left: 0;
+  }
+  .build-footer {
+    gap: var(--ds-space-100, 8px);
+    padding: 0 var(--ds-space-150, 12px);
+  }
+  .build-price > span {
+    max-width: 100px;
+    line-height: 1.3;
+  }
+  .next-section {
+    flex-wrap: wrap;
+  }
+}
