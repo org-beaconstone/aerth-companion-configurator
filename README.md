@@ -30,6 +30,17 @@ npx playwright install chromium
 npm run test:e2e    # Starts its own dev server on port 4174
 ```
 
+### Test the production build
+
+To test the bundled app instead of the development server, run the same browser-test mode used by GitHub Actions:
+
+```bash
+npm run build
+TEST_PRODUCTION=1 npm run test:e2e
+```
+
+Install Chromium first using the command above. The test runner starts and stops the production preview on port **4174**, so leave that port free. This does not deploy the app.
+
 ## Design system
 
 The interface uses official **Atlassian Design System** buttons, icon buttons/icons, toggle, lozenge, textfield, and section message, plus ADS color, typography, shape, and spacing tokens. Custom automotive cards and the native dialog use ADS tokens. The dialog remains native because the current ADS modal dependency failed under this React 19 build.
