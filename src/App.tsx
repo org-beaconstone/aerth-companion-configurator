@@ -73,6 +73,7 @@ export default function App() {
   const [category, setCategory] = useState<Category>('Size');
   const [view, setView] = useState<View>('three-quarter');
   const [stowed, setStowed] = useState(false);
+  const [showRamp, setShowRamp] = useState(false);
   const [focus, setFocus] = useState(false);
   const [storageOk, setStorageOk] = useState(true);
   const [notice, setNotice] = useState('');
@@ -107,6 +108,7 @@ export default function App() {
     setConfig({ ...DEFAULT_CONFIG });
     setCategory('Size');
     setStowed(false);
+    setShowRamp(false);
     setView('three-quarter');
     const url = new URL(window.location.href);
     url.searchParams.delete('build');
@@ -230,6 +232,7 @@ export default function App() {
                 color={color.hex}
                 vehicleColor={vehicleColor.hex}
                 stowed={stowed}
+                showRamp={showRamp}
                 view={view}
               />
             </Suspense>
@@ -240,9 +243,9 @@ export default function App() {
           <div className="stage-callout">
             <PawPrint size={17} />
             <div>
-              <strong>{stowed ? 'Space for what matters.' : 'A welcome at every height.'}</strong>
+              <strong>{showRamp && stowed ? 'Space for what matters.' : 'A welcome at every height.'}</strong>
               <span>
-                {stowed
+                {showRamp && stowed
                   ? 'Underfloor stow concept • cargo floor kept clear'
                   : 'Open tailgate • one original, unbranded SUV'}
               </span>
@@ -489,23 +492,41 @@ export default function App() {
 
             <div className="stow-card">
               <div className="stow-icon">
-                <LockKeyhole size={20} strokeWidth={1.5} />
+                <PawPrint size={20} strokeWidth={1.5} />
               </div>
               <div>
-                <strong>Less ramp. More room.</strong>
-                <p>Preview the telescoping, underfloor concept.</p>
+                <strong>Ramp preview</strong>
+                <p>Show the integrated retractable pet ramp in the 3D view.</p>
               </div>
               <Toggle
-                id="stow-ramp"
-                testId="stow-control"
-                label="Stow retractable ramp"
-                isChecked={stowed}
-                onChange={() => {
-                  setStowed(value => !value);
-                  if (!stowed) setView('cargo');
-                }}
+                id="show-ramp"
+                testId="show-ramp-control"
+                label="Show ramp preview"
+                isChecked={showRamp}
+                onChange={() => setShowRamp(value => !value)}
               />
             </div>
+            {showRamp && (
+              <div className="stow-card">
+                <div className="stow-icon">
+                  <LockKeyhole size={20} strokeWidth={1.5} />
+                </div>
+                <div>
+                  <strong>Less ramp. More room.</strong>
+                  <p>Preview the telescoping, underfloor concept.</p>
+                </div>
+                <Toggle
+                  id="stow-ramp"
+                  testId="stow-control"
+                  label="Stow retractable ramp"
+                  isChecked={stowed}
+                  onChange={() => {
+                    setStowed(value => !value);
+                    if (!stowed) setView('cargo');
+                  }}
+                />
+              </div>
+            )}
             <div className="dimension-note">
               <Ruler size={15} />
               <span>Concept dimensions. Fit and load ratings require validation.</span>
