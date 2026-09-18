@@ -142,9 +142,9 @@ describe('COLORS catalog', () => {
 
 describe('VEHICLE_COLORS catalog', () => {
   it('has all vehicle color options', () => {
-    expect(VEHICLE_COLORS).toHaveLength(3);
+    expect(VEHICLE_COLORS).toHaveLength(4);
     const ids = VEHICLE_COLORS.map(v => v.id);
-    expect(ids).toEqual(['sage', 'chalk', 'graphite']);
+    expect(ids).toEqual(['sage', 'chalk', 'graphite', 'teal']);
   });
 
   it('each vehicle color has required fields', () => {
@@ -374,7 +374,7 @@ describe('priceFor', () => {
     const types: Type[] = ['retractable'];
     const coatings: Coating[] = ['ribbed', 'cushioned', 'cork'];
     const colors: Color[] = ['red', 'blue', 'yellow'];
-    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite'];
+    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite', 'teal'];
     const materials: Material[] = ['aluminum', 'polypropylene', 'cork'];
 
     let count = 0;
@@ -403,8 +403,8 @@ describe('priceFor', () => {
         }
       }
     }
-    // 3 sizes * 1 product * 3 surfaces * 3 colors * 3 paints * 3 materials.
-    expect(count).toBe(243);
+    // 3 sizes * 1 product * 3 surfaces * 3 colors * 4 paints * 3 materials.
+    expect(count).toBe(324);
   });
 
   it('prices increase monotonically with options', () => {
@@ -996,13 +996,13 @@ describe('boundary: empty and corrupt storage', () => {
   });
 });
 
-describe('comprehensive: all 243 configurations', () => {
-  it('validates all retractable combinations (3 sizes * 3 coatings * 3 colors * 3 vehicle colors * 3 materials = 243)', () => {
+describe('comprehensive: all 324 configurations', () => {
+  it('validates all retractable combinations (3 sizes * 3 coatings * 3 colors * 4 vehicle colors * 3 materials = 324)', () => {
     const sizes: Size[] = ['small', 'medium', 'large'];
     const types: Type[] = ['retractable'];
     const coatings: Coating[] = ['ribbed', 'cushioned', 'cork'];
     const colors: Color[] = ['red', 'blue', 'yellow'];
-    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite'];
+    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite', 'teal'];
     const materials: Material[] = ['aluminum', 'polypropylene', 'cork'];
 
     let validCount = 0;
@@ -1047,8 +1047,8 @@ describe('comprehensive: all 243 configurations', () => {
       }
     }
 
-    expect(validCount).toBe(243);
-    expect(priceCheckCount).toBe(243);
+    expect(validCount).toBe(324);
+    expect(priceCheckCount).toBe(324);
   });
 
   it('all configurations roundtrip through URL', () => {
@@ -1056,7 +1056,7 @@ describe('comprehensive: all 243 configurations', () => {
     const types: Type[] = ['retractable'];
     const coatings: Coating[] = ['ribbed', 'cushioned', 'cork'];
     const colors: Color[] = ['red', 'blue', 'yellow'];
-    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite'];
+    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite', 'teal'];
     const materials: Material[] = ['aluminum', 'polypropylene', 'cork'];
 
     let roundtripCount = 0;
@@ -1089,7 +1089,7 @@ describe('comprehensive: all 243 configurations', () => {
       }
     }
 
-    expect(roundtripCount).toBe(243);
+    expect(roundtripCount).toBe(324);
   });
 
   it('all configurations roundtrip through storage', () => {
@@ -1097,7 +1097,7 @@ describe('comprehensive: all 243 configurations', () => {
     const types: Type[] = ['retractable'];
     const coatings: Coating[] = ['ribbed', 'cushioned', 'cork'];
     const colors: Color[] = ['red', 'blue', 'yellow'];
-    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite'];
+    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite', 'teal'];
     const materials: Material[] = ['aluminum', 'polypropylene', 'cork'];
 
     let roundtripCount = 0;
@@ -1137,7 +1137,7 @@ describe('comprehensive: all 243 configurations', () => {
       }
     }
 
-    expect(roundtripCount).toBe(243);
+    expect(roundtripCount).toBe(324);
   });
 });
 
@@ -1147,7 +1147,7 @@ describe('price bounds', () => {
     const types: Type[] = ['retractable'];
     const coatings: Coating[] = ['ribbed', 'cushioned', 'cork'];
     const colors: Color[] = ['red', 'blue', 'yellow'];
-    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite'];
+    const vehicleColors: VehicleColor[] = ['sage', 'chalk', 'graphite', 'teal'];
     const materials: Material[] = ['aluminum', 'polypropylene', 'cork'];
 
     const prices: number[] = [];
@@ -1177,10 +1177,10 @@ describe('price bounds', () => {
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
 
-    // Now with only retractable type: 3 sizes * 3 coatings * 3 colors * 3 vehicle colors * 3 materials = 243
+    // Now with only retractable type: 3 sizes * 3 coatings * 3 colors * 4 vehicle colors * 3 materials = 324
     expect(minPrice).toBe(780); // 480 base + 180 small + 120 integrated retractable
     expect(maxPrice).toBe(1180); // 480 + 420 + 120 + 80 cork surface + 80 cork material
-    expect(prices.length).toBe(243);
+    expect(prices.length).toBe(324);
   });
 });
 

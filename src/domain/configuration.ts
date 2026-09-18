@@ -13,7 +13,7 @@ export type Size = 'small' | 'medium' | 'large';
 export type Type = 'retractable'; // Only retractable design is now available
 export type Coating = 'ribbed' | 'cushioned' | 'cork';
 export type Color = 'red' | 'blue' | 'yellow';
-export type VehicleColor = 'sage' | 'chalk' | 'graphite';
+export type VehicleColor = 'sage' | 'chalk' | 'graphite' | 'teal';
 export type Material = 'aluminum' | 'polypropylene' | 'cork';
 
 export type Configuration = {
@@ -140,6 +140,12 @@ export const VEHICLE_COLORS = [
     label: 'Graphite',
     ...PRODUCT_PALETTE.graphite,
     description: 'ADS Neutral800 finish',
+  },
+  {
+    id: 'teal' as const,
+    label: 'Teal',
+    ...PRODUCT_PALETTE.teal,
+    description: 'ADS Teal800 finish',
   },
 ] as const;
 
@@ -304,7 +310,7 @@ function isValidColor(value: unknown): value is Color {
 }
 
 function isValidVehicleColor(value: unknown): value is VehicleColor {
-  return value === 'sage' || value === 'chalk' || value === 'graphite';
+  return value === 'sage' || value === 'chalk' || value === 'graphite' || value === 'teal';
 }
 
 function isValidMaterial(value: unknown): value is Material {
