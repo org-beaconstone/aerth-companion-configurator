@@ -11,6 +11,7 @@ export const PRODUCT_PALETTE = {
   sage: { hex: '#216E4E', palette: 'Green800', foreground: '#FFFFFF' },
   chalk: { hex: '#DDDEE1', palette: 'Neutral300', foreground: '#292A2E' },
   graphite: { hex: '#505258', palette: 'Neutral800', foreground: '#FFFFFF' },
+  teal: { hex: '#206A83', palette: 'Teal800', foreground: '#FFFFFF' },
 } as const;
 
 /** Quiet, closely related neutrals keep the vehicle secondary to the ramp. */
