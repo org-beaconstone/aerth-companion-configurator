@@ -1,0 +1,29 @@
+# AERTH is a static Vite app; Kaizen serves only the generated dist assets.
+buildCommand = "npm run build"
+devCommand = "npm run dev"
+# Kaizen creates a preview deployment, then --auto-promote activates production.
+defaultTarget = "preview"
+aliases = ["aerth-companion-configurator.kaizen.shared.atlassian-3p.com"]
+customDomains = []
+outputDirectory = "dist"
+projectId = "prj_aa7bead0e05743a6bbc5c13c8d733a1e"
+
+[toolchain]
+cliVersion = "0.1.1530"
+
+[security.csp]
+connectSrc = ["'self'"]
+scriptSrc = ["'self'"]
+styleSrc = ["'self'", "'unsafe-inline'"]
+imgSrc = ["'self'", "data:", "blob:"]
+fontSrc = ["'self'"]
+mediaSrc = ["'self'", "blob:"]
+
+[security.xFrameOptions]
+mode = "deny"
+
+[security.crossOriginResourcePolicy]
+mode = "sameOrigin"
+
+[security.cors]
+mode = "disabled"

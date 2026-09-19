@@ -1,4 +1,5 @@
 node_modules/
+.kaizen/
 dist/
 playwright-report/
 test-results/

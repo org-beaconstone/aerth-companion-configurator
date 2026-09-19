@@ -77,13 +77,17 @@ See [architecture](docs/architecture.md) and the [keynote runbook](docs/keynote-
 
 ## Repository and deployment
 
-Private GitHub repository: [org-beaconstone/aerth-companion-configurator](https://github.com/org-beaconstone/aerth-companion-configurator). The existing `titan-app` is untouched. Repository upload and website deployment are separate operations.
+GitHub repository: [org-beaconstone/aerth-companion-configurator](https://github.com/org-beaconstone/aerth-companion-configurator).
 
-`.github/workflows/ci.yml` runs the build, lint, unit tests, and production Chromium browser tests on pushes to `main` and pull requests. It retains the static build and browser test report as artifacts. It does not deploy a website.
+**Live page:** https://aerth-companion-configurator.kaizen.shared.atlassian-3p.com/
+
+Every successful push to `main` runs lint, build, unit tests, and production Chromium tests, then calls `.github/workflows/deploy.yml` to run `kaizen deploy push --auto-promote`. Pull requests only run checks and cannot promote the live site. You can also use **Actions → Build, test and deploy → Run workflow** on `main` to redeploy.
+
+Kaizen uses GitHub's short-lived OIDC identity, not a stored personal token. The grant is restricted to this repository's numeric identity, `main`, and the committed reusable deployment workflow. The CLI version and durable project binding are pinned in `kaizen.toml`. See [deployment operations](docs/deployment.md).
 
 The optional `bitbucket-pipelines.yml` remains available for future Bitbucket use; no Bitbucket remote is configured.
 
-Publish the contents of `dist/` to a static host after `npm run build`. Vite uses `base: './'` and there is no client-side route hierarchy, so root or subdirectory hosting works. Serve over HTTP(S), not by double-clicking the HTML file. A public host and organizational access policy have not been selected.
+Kaizen serves only the generated `dist/` assets. The demo is available without visitor sign-in, as approved for this fictional product. There is no SPA catch-all route: `/` and real assets are served, unknown paths return 404, and shared `?build=` links still work. `.kaizen/` is generated locally and excluded from Git and linting.
 
 ## Reference context
 

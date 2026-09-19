@@ -3,6 +3,7 @@ node_modules/
 .npm
 
 # Build outputs
+.kaizen/
 dist/
 build/
 .vite/
