@@ -1,4 +1,4 @@
-name: Build and test
+name: Build, test and deploy
 
 on:
   push:
@@ -11,12 +11,13 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Never interrupt production promotion. Newer PR checks may replace older ones.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,3 +43,16 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  deploy:
+    name: Publish live site
+    needs: verify
+    if: >-
+      github.repository == 'org-beaconstone/aerth-companion-configurator' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: read
+      id-token: write
+    # A reusable workflow supplies the signed job_workflow_ref matched by Kaizen.
+    uses: ./.github/workflows/deploy.yml

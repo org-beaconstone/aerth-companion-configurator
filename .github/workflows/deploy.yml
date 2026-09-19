@@ -1,0 +1,78 @@
+name: Kaizen production deployment
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'org-beaconstone/aerth-companion-configurator' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: aerth-kaizen-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Read pinned Kaizen version
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import tomllib
+          with open('kaizen.toml', 'rb') as source:
+              config = tomllib.load(source)
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write(f"KAIZEN_CLI_SELECTOR={config['toolchain']['cliVersion']}\n")
+          PY
+      - name: Install pinned Kaizen CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://kaizen.internal.atlassian.com/__kaizen/cli/install.sh \
+            | sh -s -- --version "$KAIZEN_CLI_SELECTOR" --no-install-skill
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          test "$("$HOME/.local/bin/kaizen" --version)" = "kaizen $KAIZEN_CLI_SELECTOR"
+      - name: Publish and auto-promote
+        run: >-
+          kaizen deploy push --project-dir . --auto-promote
+          --auth-source oidc --oidc-provider github --oidc-preflight
+          --oidc-audience https://kaizen.internal.atlassian.com
+      - name: Verify and record live site
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import time
+          import tomllib
+          import urllib.request
+          with open('kaizen.toml', 'rb') as source:
+              config = tomllib.load(source)
+          for host in config['aliases']:
+              url = f'https://{host}/'
+              for attempt in range(12):
+                  try:
+                      with urllib.request.urlopen(url, timeout=20) as response:
+                          html = response.read().decode()
+                          if response.status == 200 and '<title>AERTH' in html:
+                              break
+                          raise RuntimeError('Expected AERTH page was not served')
+                  except Exception:
+                      if attempt == 11:
+                          raise
+                      time.sleep(5)
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+                  summary.write(f'## Live AERTH configurator\n\n{url}\n\n')
+                  summary.write(f"Commit: `{os.environ['GITHUB_SHA']}`\n")
+          PY
